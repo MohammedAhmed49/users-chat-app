@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import Add from "../img/addAvatar.png";
 import { firebaseSignUp } from "../utils/firebase.js";
 
 const Register = () => {
+  const navigate = useNavigate();
   const submitHandler = async (e) => {
     e.preventDefault();
     const displayName = e.target[0].value;
@@ -10,7 +12,10 @@ const Register = () => {
     const file = e.target[3].files[0];
 
     const user = await firebaseSignUp(email, password, displayName, file);
-    console.log(user);
+    
+    if (user) {
+      navigate("/");
+    }
   };
   return (
     <div className="formContainer">

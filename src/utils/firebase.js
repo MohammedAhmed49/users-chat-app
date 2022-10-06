@@ -24,11 +24,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const storage = getStorage();
+export const storage = getStorage();
 
-const auth = getAuth();
+export const auth = getAuth();
 
-const db = getFirestore();
+export const db = getFirestore();
 
 export const firebaseSignUp = async (email, password, displayName, file) => {
   try {
@@ -49,20 +49,22 @@ export const firebaseSignUp = async (email, password, displayName, file) => {
         alert(error);
       },
       async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        updateProfile(userCreds.user, {
-          displayName: displayName,
-          photoURL: downloadURL,
-        });
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          console.log(downloadURL);
+          updateProfile(userCreds.user, {
+            displayName: displayName,
+            photoURL: downloadURL,
+          });
 
-        await setDoc(doc(db, "users", userCreds.user.uid), {
-          email: email,
-          displayName: displayName,
-          photoURL: downloadURL,
-          uid: userCreds.user.uid,
-        });
+          await setDoc(doc(db, "users", userCreds.user.uid), {
+            email: email,
+            displayName: displayName,
+            photoURL: downloadURL,
+            uid: userCreds.user.uid,
+          });
 
-        await setDoc(doc(db, "usersChat", userCreds.user.uid), {});
+          await setDoc(doc(db, "usersChat", userCreds.user.uid), {});
+        });
       }
     );
 
@@ -71,5 +73,6 @@ export const firebaseSignUp = async (email, password, displayName, file) => {
     const errorCode = error.code;
     const errorMessage = error.message;
     alert(errorCode, errorMessage);
+    return null;
   }
 };
