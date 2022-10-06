@@ -1,12 +1,23 @@
 import Add from "../img/addAvatar.png";
+import { firebaseSignUp } from "../utils/firebase.js";
 
 const Register = () => {
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const displayName = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+    const file = e.target[3].files[0];
+
+    const user = await firebaseSignUp(email, password, displayName, file);
+    console.log(user);
+  };
   return (
     <div className="formContainer">
       <div className="formWrapper">
         <span className="logo">Users Chat</span>
         <span className="title">Register</span>
-        <form>
+        <form onSubmit={(e) => submitHandler(e)}>
           <input required type="text" placeholder="display name" />
           <input required type="email" placeholder="email" />
           <input required type="password" placeholder="password" />
