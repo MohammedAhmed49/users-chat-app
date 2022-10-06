@@ -11,7 +11,15 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAv6c07DTc8PB7Db4yyNWmhPegMDTThJXg",
@@ -73,6 +81,22 @@ export const firebaseSignUp = async (email, password, displayName, file) => {
     const errorCode = error.code;
     const errorMessage = error.message;
     alert(errorCode, errorMessage);
+    return null;
+  }
+};
+
+export const firebaseSearchUser = async (displayName) => {
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("displayName", "==", displayName));
+  try {
+    const querySnapshot = await getDocs(q);
+    let user = null;
+    querySnapshot.forEach((doc) => {
+      user = doc.data();
+    });
+    return user;
+  } catch (error) {
+    alert(error);
     return null;
   }
 };

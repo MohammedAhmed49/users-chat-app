@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { firebaseSearchUser } from "../utils/firebase";
 
 const Search = () => {
+  const [userInput, setUserInput] = useState(null);
+  const [user, setUser] = useState(null);
+
+  const userSearch = async () => {
+    const result = await firebaseSearchUser(userInput);
+    setUser(result);
+  };
+
+  const handleKey = (e) => {
+    e.key === "Enter" && userSearch();
+  };
   return (
     <div className="search">
       <div className="searchForm">
-        <input type="text" placeholder="Search for user" />
+        <input
+          type="text"
+          placeholder="Search for user"
+          onChange={(e) => setUserInput(e.target.value)}
+          onKeyDown={handleKey}
+        />
       </div>
-      <div className="userChat">
-        <img src="https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
-        <div className="userChatInfo">
-          <span>Momo</span>
+      {user ? (
+        <div className="userChat">
+          <img src={user.photoURL} />
+          <div className="userChatInfo">
+            <span>{user.displayName}</span>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 };
