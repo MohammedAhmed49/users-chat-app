@@ -61,6 +61,8 @@ export const firebaseSignUp = async (email, password, displayName, file) => {
           photoURL: downloadURL,
           uid: userCreds.user.uid,
         });
+
+        await setDoc(doc(db, "usersChat", userCreds.user.uid), {});
       }
     );
 
