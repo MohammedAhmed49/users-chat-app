@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Add from "../img/addAvatar.png";
 import { firebaseSignUp } from "../utils/firebase.js";
 
@@ -12,7 +12,7 @@ const Register = () => {
     const file = e.target[3].files[0];
 
     const user = await firebaseSignUp(email, password, displayName, file);
-    
+
     if (user) {
       navigate("/");
     }
@@ -33,7 +33,9 @@ const Register = () => {
           </label>
           <button>Sign up</button>
         </form>
-        <p>You do have an account? Login</p>
+        <p>
+          You do have an account? <Link to="/login">Login</Link>
+        </p>
       </div>
     </div>
   );
